@@ -1,45 +1,58 @@
 #!/bin/bash
-echo -e "\e[1;37mWelcome to Ruby2Go: The best way to install Ruby.\e[0m" #Print logo
-OS=$(lsb_release -si)								# OS (distro name)
-ARCH=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')	# Processor architecture
-VER=$(lsb_release -sr)								# OS release version
+# Nearsoft, Inc.
+# Nearsoft Labs
 
-#Checks if a command exits: Returns 1 if the command exits
-checkcommand(){
-	if type $1 > /dev/null 2>&1; then
-  		echo "1"
-	else echo "0"
-	fi
+echo -e "\e[1;37mWelcome to Ruby2Go: The best way to install Ruby.\e[0m"    #Print logo
+
+#########################################
+### Choose the proper package manager ###
+#########################################
+
+# Checks if evaluated package manager is installed
+haveProg() {
+    [ -x "$(which $1)" ]
 }
 
-curl=$(checkcommand "curl");
-git=$(checkcommand "git");
+assignPacMan() {
+    pack = $1
+}
+
+# The package manager instalation command string is stored in the 'pack' variable
+if haveProg apt-get ; then pack="apt-get install -y"
+elif haveProg yum ; then pack="yum install"
+elif haveProg pacman ; then pack="pacman -S"
+else
+    echo 'No package manager found!'
+    exit 2
+fi
 
 
-case $OS in
-	Ubuntu|Debian|LinuxMint)
-		if [ $curl == 0 ]; then
-			echo -e "\e[1;37mInstalling Curl.\e[0m" #A little print 
-			sudo apt-get install curl
-		fi
-		if [ $git == 0 ]; then
-			echo -e "\e[1;37mInstalling Git.\e[0m" #A little print 
-			sudo apt-get install git
-		fi
-	;;
-	Fedora)
-		if [ $curl == 0 ]; then
-			echo -e "\e[1;37mInstalling Curl.\e[0m" #A little print 
-			yum install curl
-		fi
-		if [ $git == 0 ]; then
-			echo -e "\e[1;37mInstalling Git.\e[0m" #A little print 
-			yum install git
-		fi
-		
-	;;
-esac
 
-echo -e "\e[1;37mGreat, you've got everything installed. Happy Coding.\e[0m" #Print logo
+#################################################
+### Functions for installation of requirements ###
+#################################################
 
+# Checks if a command exits: Returns 1 if the command exits
+isInstalled(){
+    if type $1 > /dev/null 2>&1; then
+        echo "1"
+    else echo "0"
+    fi
+}
 
+install(){
+    check=$(isInstalled $1);
+    if [ $check == 0 ]; then
+            echo -e "Installing $1." #A little print
+            $pack $1
+    fi
+}
+
+####################################
+### Installation of requirements ###
+####################################
+
+install "curl"
+install "git"
+
+echo -e "Great, you've got everything installed. Happy Coding." #Print logo
