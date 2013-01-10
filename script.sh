@@ -8,8 +8,9 @@ VER=$(lsb_release -sr)								# OS release version
 
 case $OS in
 	Ubuntu|Debian)
-	sudo apt-get install curl git vim 
+		sudo apt-get install curl
 	;;
 	Fedora)
+		yum install curl
 	;;
 esac
