@@ -64,6 +64,6 @@ install(){
 
 install "curl"
 install "git"
-
+\curl -L https://get.rvm.io | bash -s stable --ruby
 installRubyRequirements
 echo -e "Great, you've got everything installed. Happy Coding." #Print logo
