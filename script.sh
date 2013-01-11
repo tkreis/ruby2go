@@ -13,6 +13,16 @@ haveProg() {
     [ -x "$(which $1)" ]
 }
 
+installRubyRequirements(){
+	output=$(rvm requirements)
+	RUBY_REGEX='ruby:(.*)'
+	if [[ $output =~ $RUBY_REGEX ]]; then
+		requirements="${BASH_REMATCH[1]}"
+		sudo $requirements
+	fi
+	sudo -k
+}
+
 assignPacMan() {
     pack = $1
 }
@@ -55,4 +65,5 @@ install(){
 install "curl"
 install "git"
 
+installRubyRequirements
 echo -e "Great, you've got everything installed. Happy Coding." #Print logo
